@@ -4,33 +4,29 @@ Created on 28 Feb 2020
 @author: Lisa Wehbrink
 '''
 
-from datetime import datetime
 
 class Booking(object):
     passenger = ""
     reference = ""
-    flight_no = 0
-    date = datetime.now()
+    flight = ""
 
-    def __init__(self, passenger, reference, flight_no, date):
+    def __init__(self, passenger, reference, flight):
         self.passenger = passenger
         self.reference = reference
-        self.flight_no = flight_no
-        self.date = date
+        self.flight = flight
         
     def __eq__(self, other):
         passengers = self.passenger == other.passenger
-        date = self.date == other.date
-        number = self.flight_no == other.flight_no
+        flights = self.flight == other.flight
         
-        if passengers and date and number:
+        if passengers and flights:
             return True
         
         return False
 
 
-def create_Booking(passenger, reference, flight_no, date):
-    booking = Booking(passenger, reference, flight_no, date)
+def create_Booking(passenger, reference, flight):
+    booking = Booking(passenger, reference, flight)
     return booking
 
 
@@ -38,11 +34,11 @@ bookings = []
 next_id = 111
 
 
-def book(passenger, flight_no, date):
+def book(passenger, flight):
     global next_id
-    reference = passenger.first_name[0] + passenger.last_name[0] + str(flight_no) + str(next_id)
+    reference = passenger.first_name[0] + passenger.last_name[0] + str(flight.flight_no) + str(next_id)
     
-    booking = Booking(passenger, reference, flight_no, date)
+    booking = Booking(passenger, reference, flight)
     
     for b in bookings:
         if b == booking:
