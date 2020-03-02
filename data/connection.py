@@ -183,4 +183,7 @@ def store_booking(first_name, last_name, dob, flight_no, flight_date):
     query = query.replace("%d", ("'" + str(flight_date) + "'"))
 
     cur.execute(query)
+    db.commit()
+    db.close()
+    
     return True
