@@ -35,3 +35,41 @@ class TestBook(unittest.TestCase):
         
         assert len(result) > 0
     
+    
+    def testPassengerRetrieval(self):
+        first_name = "Matt"
+        last_name = "Smith"
+        dob = "1979-04-13"
+        
+        p = connection.retrieve_passenger(first_name, last_name, dob)
+        
+        assert p.first_name == "Matt" and p.last_name == "Smith"
+        
+    
+    def testPassengerStorage(self):
+        p = passenger.register("Rebecca", "Schmidt", "1993-06-30", "DE")
+        
+        connection.store_passenger(p)
+        test = connection.retrieve_passenger("Rebecca", "Schmidt", "1993-06-30")
+        
+        assert test.nationality == "DE" and test.first_name == "Rebecca"
+        
+    
+    def testBookingRetrieval(self):
+        b = connection.retrieve_booking(131997620201224)
+        
+        assert b.passenger_id == 3 and b.flight_no == 976
+        
+        
+    def testBookingRetrievalByPassenger(self):
+        bookings = connection.retrieve_booking_by_passenger("Matt", "Smith", "1979-04-13")
+        
+        assert len(bookings) >= 1
+        b = bookings[0]
+        assert b.passenger_id == 3 and b.flight_no == 976
+    
+    
+    def testBooking(self):
+        success = connection.store_booking("Rebecca", "Schmidt", "1993-06-30", 989, "2020-05-18")
+        
+        assert success == True

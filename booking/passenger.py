@@ -15,7 +15,7 @@ class Passenger(object):
         self.first_name = first_name
         self.last_name = last_name
         self.dob = dob
-        nationality = nationality
+        self.nationality = nationality
         
     def __eq__(self, other):
         names = self.first_name == other.first_name and self.last_name == other.last_name
@@ -31,17 +31,10 @@ def create_Passenger(first_name, last_name, dob, nationality):
     passenger = Passenger(first_name, last_name, dob, nationality)
     return passenger
 
-passengers = []
-
 
 def register(first_name, last_name, string_date, nationality):
     dob = datetime.strptime(string_date, '%Y-%m-%d')
     
     p = Passenger(first_name, last_name, dob, nationality)
-    
-    for passenger in passengers:
-        if passenger == p:
-            return passenger
-    
-    passengers.append(p)
+
     return p
