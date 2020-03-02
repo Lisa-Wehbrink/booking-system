@@ -35,7 +35,7 @@ passengers = []
 
 
 def register(first_name, last_name, string_date, nationality):
-    dob = datetime.strptime(string_date, '%d/%m/%y')
+    dob = datetime.strptime(string_date, '%Y-%m-%d')
     
     p = Passenger(first_name, last_name, dob, nationality)
     
