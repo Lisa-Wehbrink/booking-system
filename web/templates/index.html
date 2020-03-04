@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Booking Engine</title>
+	<link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+
+<body>
+	<div id="header"> 
+		<h1>Booking Engine</h1>
+	</div>
+	<div id="nav">
+		<ul>
+			<li><a class="active"  href="index.html">Home</a></li>
+			<li><a href="search.html">Book a Flight</a></li>
+			<li><a href="display.html">Find a Booking</a></li>
+			<li><a href="cancel.html">Cancel a Booking</a></li>
+			<li><a href="stats.html">Statistics</a></li>
+		</ul>
+	</div>
+	
+	<div class="content">
+		<div id="welcome">
+			<h2>Welcome, {{user}}</h2>
+		</div>
+		<div class="box-padding">
+			<div class="boxes">
+				<p class="box-title">Flights Available</p>
+				<p class="box-value">{{flights}}</p>
+			</div>
+			<div class="boxes">
+				<p class="box-title">Flights Booked</p>
+				<p class="box-value">{{bookings}}</p>
+			</div>
+			<div class="boxes">
+				<p class="box-title">Customers</p>
+				<p class="box-value">{{customers}}</p>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="footer">
+		<p>2020</p>
+	</div>
+
+</body>
+</html>

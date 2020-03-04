@@ -9,7 +9,6 @@ from booking import book
 from booking import passenger
 from booking import flight
 
-
 def connect():
     global db
     try:
