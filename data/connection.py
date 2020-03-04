@@ -21,14 +21,9 @@ def connect():
         )
     except Error as e:
         print("Error reading data from MySQL table", e)
-    finally:
-        if (db.is_connected()):
-            print("Connection established.")
-    
     
 def disconnect():
     db.close()
-    print("Connection closed.")
 
 
 def run_custom_query(query):
@@ -45,12 +40,48 @@ def run_custom_query(query):
     return result
 
 
+def count_bookings():
+    query = "SELECT COUNT(reference_no) FROM bookings"
+    
+    connect()
+    cur = db.cursor()
+    cur.execute(query)
+    
+    result = cur.fetchone()
+    
+    return result[0]
+
+def count_customers():
+    query = "SELECT COUNT(customer_id) FROM passengers"
+    
+    connect()
+    cur = db.cursor()
+    cur.execute(query)
+    
+    result= cur.fetchone()
+    
+    return result[0]
+
+def count_flights():
+    query = "SELECT COUNT(*) FROM flights"
+    
+    connect()
+    cur = db.cursor()
+    cur.execute(query)
+    
+    result= cur.fetchone()
+    
+    return result[0]
+
+
 def retrieve_flight(number, flight_date):
     connect()
     
-    query = "SELECT * FROM flights WHERE flight_no = " + str(number)
-    query += " AND flight_date = " + flight_date
+    query = """SELECT * FROM flights 
+                WHERE flight_no = {fno} AND flight_date = {fdat}"""
     
+    query = query.format(fno = str(number), fdat = str(flight_date))
+
     cur = db.cursor()
     cur.execute(query)
     
@@ -62,18 +93,13 @@ def retrieve_flight(number, flight_date):
 
 
 def store_flight(f):
-    query = "INSERT INTO flights (flight_no, flight_date, dep_time, arr_time"
-    query += ", origin, destination, capacity) "
-    query += "VALUES (%a, %b, %c, %d, %e, %f, %g) "
-    query += "ON DUPLICATE KEY UPDATE flight_no=%a"
+    query = """INSERT INTO flights (flight_no, flight_date, dep_time, arr_time, origin, destination, capacity)
+                VALUES ({fno}, '{fdat}', '{fdep}', '{farr}', '{ori}', '{dest}', {cap})
+                ON DUPLICATE KEY UPDATE flight_no = {fno}"""
     
-    query = query.replace("%a", str(f.flight_no))
-    query = query.replace("%b", ("'" + str(f.date) + "'"))
-    query = query.replace("%c", ("'" + str(f.dep_time) + "'"))
-    query = query.replace("%d", ("'" + str(f.arr_time) + "'"))
-    query = query.replace("%e", ("'" + f.origin + "'"))
-    query = query.replace("%f", ("'" + f.destination + "'"))
-    query = query.replace("%g", str(f.capacity))
+    query = query.format(fno = f.flight_no, fdat = str(f.date), fdep = str(f.dep_time),
+                            farr = str(f.arr_time), ori = f.origin, dest = f.destination,
+                            cap = str(f.capacity))
         
     connect()
     cur = db.cursor()
@@ -85,9 +111,11 @@ def store_flight(f):
 def retrieve_passenger(first_name, last_name, dob):
     connect()
     
-    query = "SELECT * FROM passengers WHERE first_name = '" + first_name + "' "
-    query += " AND last_name = '" + last_name + "'"
-    query += " AND date_of_birth = '" + str(dob) + "'"
+    query = """SELECT * FROM passengers
+                WHERE first_name = '{fn}' AND last_name = '{ln}'
+                AND date_of_birth = '{birth}'"""
+    
+    query = query.format(fn = first_name, ln = last_name, birth = dob)
     
     cur = db.cursor()
     cur.execute(query)
@@ -100,15 +128,13 @@ def retrieve_passenger(first_name, last_name, dob):
 
 
 def store_passenger(p):
-    query = "INSERT INTO passengers (first_name, last_name, date_of_birth, nationality)"
-    query += "VALUES (%a, %b, %c, %d) "
-    query += "ON DUPLICATE KEY UPDATE first_name=%a"
+    query = """INSERT INTO passengers (first_name, last_name, date_of_birth, nationality)
+                VALUES ('{fn}', '{ln}', '{birth}', '{nat}')
+                ON DUPLICATE KEY UPDATE first_name = '{fn}'"""
     
-    query = query.replace("%a", ("'" + p.first_name + "'"))
-    query = query.replace("%b", ("'" + p.last_name + "'"))
-    query = query.replace("%c", ("'" + str(p.dob) + "'"))
-    query = query.replace("%d", ("'" + p.nationality + "'"))
-
+    query = query.format(fn = p.first_name, 
+                         ln = p.last_name, birth = str(p.dob), nat = p.nationality)
+    
     connect()
     cur = db.cursor()
     cur.execute(query)
@@ -135,9 +161,10 @@ def retrieve_booking(reference_no):
 def retrieve_booking_by_passenger(first_name, last_name, dob):
     query = """SELECT b.customer_id, reference_no, flight_no, flight_date 
             FROM passengers p INNER JOIN bookings b 
-            ON p.customer_id = b.customer_id WHERE first_name = '"""
-    query += first_name + "' and last_name = '" + last_name + "'"
-    query += " AND date_of_birth = '" + str(dob) + "'"
+            ON p.customer_id = b.customer_id 
+            WHERE first_name = '{fn}' AND last_name = '{ln}' 
+            AND date_of_birth = '{d_o_b}'"""
+    query = query.format(fn = first_name, ln = last_name, d_o_b = dob)
 
     connect()
     cur = db.cursor()
@@ -162,8 +189,8 @@ def store_booking(first_name, last_name, dob, flight_no, flight_date):
     f_query += " AND flight_date = '" + str(flight_date) + "'"
     
     query = "INSERT INTO bookings (reference_no, customer_id, flight_no, flight_date) "
-    query += "VALUES (%a, %b, %c, %d)"
-    query += " ON DUPLICATE KEY UPDATE reference_no=%a"
+    query += "VALUES ('{ref}','{cusid}', {fno}, '{fdat}')"
+    query += " ON DUPLICATE KEY UPDATE reference_no='{ref}'"
     
     connect()
     cur = db.cursor()
@@ -176,11 +203,8 @@ def store_booking(first_name, last_name, dob, flight_no, flight_date):
         return False
     
     reference_no = book.generate_reference(first_name, last_name, flight_date, flight_no)
-
-    query = query.replace("%a", str(reference_no))
-    query = query.replace("%b", str(cid))
-    query = query.replace("%c", str(flight_no))
-    query = query.replace("%d", ("'" + str(flight_date) + "'"))
+    
+    query = query.format(ref=reference_no, cusid=cid, fno=str(flight_no), fdat=str(flight_date))
 
     cur.execute(query)
     db.commit()

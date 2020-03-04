@@ -73,3 +73,19 @@ class TestBook(unittest.TestCase):
         success = connection.store_booking("Rebecca", "Schmidt", "1993-06-30", 989, "2020-05-18")
         
         assert success == True
+        
+    
+    def testBookCount(self):
+        result = connection.count_bookings()
+        
+        assert isinstance(result, int)
+        
+    def testPassengerCount(self):
+        result = connection.count_customers()
+        
+        assert isinstance(result, int)
+        
+    def testFlightCount(self):
+        result = connection.count_flights()
+        
+        assert isinstance(result, int)
