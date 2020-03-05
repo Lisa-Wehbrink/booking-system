@@ -153,7 +153,10 @@ def retrieve_booking(reference_no):
     cur = db.cursor()
     cur.execute(query)
     row = cur.fetchone()
-    b = book.create_Booking(row[0], row[1], row[2], row[3], row[4], row[5])
+    if not row == None:
+        b = book.create_Booking(row[0], row[1], row[2], row[3], row[4], row[5])
+    else:
+        b = None
     disconnect()
    
     return b
@@ -212,3 +215,13 @@ def store_booking(first_name, last_name, dob, flight_no, flight_date):
     db.close()
     
     return True
+
+def delete_booking(reference_no):
+    query = "DELETE FROM bookings WHERE reference_no = " + str(reference_no)
+    
+    connect()
+    cur = db.cursor()
+    cur.execute(query)
+    
+    db.commit()
+    db.close()

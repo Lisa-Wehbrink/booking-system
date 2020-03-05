@@ -22,7 +22,57 @@
 	</div>
 	
 	<div class="content">
-		What are you looking for, {{user}}?
+		<div id="myform">
+			<form "{{ url_for('cancel') }}" method="post">
+				<label for="refno">Reference Number</label>
+				<input type="number" id="refno" name="referencenumber" placeholder="Reference Number">
+				
+				<label for="fname">First Name</label>
+				<input type="text" id="fname" name="firstname" placeholder="First Name">
+				
+				<label for="lname">Last Name</label>
+				<input type="text" id="lname" name="lastname" placeholder="Last Name">
+				
+				<label for="dob">Date of Birth</label>
+				<input type="date" id="dob" name="dateofbirth">
+				
+				<input type="submit" value="Submit" id="searchbutton">
+			</form>
+		</div>
+		<div class="output">
+			<table>
+				<thead>
+					<tr>
+						<th>Reference No</th>
+						<th>Customer ID</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Flight No</th>
+						<th>Flight Date</th>
+						<th>{{action}}</th>
+					</tr>
+				</thead>
+				<tbody>
+						{% for b in bookings %}
+					<tr>
+						<td>{{b.reference_no}}</td>
+						<td>{{b.passenger_id}}</td>
+						<td>{{b.first_name}}</td>
+						<td>{{b.last_name}}</td>
+						<td>{{b.flight_no}}</td>
+						<td>{{b.flight_date}}</td>
+						<td>
+							<form "{{ url_for('cancel') }}" method="post">
+                                 <input id="b" name="booking" type="hidden" value="{{b.reference_no}}">
+                                <input type={{t}} value="Cancel" id="cancelbutton">
+                            </form>
+                            {{success}}
+						</td>
+					</tr>
+						{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 	
 	
