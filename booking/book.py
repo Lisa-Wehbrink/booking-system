@@ -10,16 +10,20 @@ class Booking(object):
     reference_no = ""
     flight_no = ""
     flight_date = ""
+    first_name = ""
+    last_name = ""
 
-    def __init__(self, passenger_id, reference_no, flight_no, flight_date):
+    def __init__(self, reference_no, passenger_id, first_name, last_name, flight_no, flight_date):
         self.passenger_id = passenger_id
         self.reference_no = reference_no
         self.flight_no = flight_no
         self.flight_date = flight_date
+        self.first_name = first_name
+        self.last_name = last_name
 
 
-def create_Booking(passenger_id, reference_no, flight_no, flight_date):
-    booking = Booking(passenger_id, reference_no, flight_no, flight_date)
+def create_Booking(reference_no, passenger_id, first_name, last_name, flight_no, flight_date):
+    booking = Booking(reference_no, passenger_id, first_name, last_name, flight_no, flight_date)
     return booking
 
 def generate_reference(first_name, last_name, flight_date, flight_no):

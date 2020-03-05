@@ -145,20 +145,22 @@ def store_passenger(p):
 def retrieve_booking(reference_no):
     connect()
     
-    query = "SELECT * FROM bookings WHERE reference_no = " + str(reference_no)
+    query = """SELECT reference_no, b.customer_id, first_name, last_name, flight_no, flight_date 
+                FROM bookings b INNER JOIN passengers p
+                ON b.customer_id = p.customer_id
+                WHERE reference_no = """ + str(reference_no)
     
     cur = db.cursor()
     cur.execute(query)
-    
     row = cur.fetchone()
-    b = book.create_Booking(row[1], row[0], row[2], row[3])
+    b = book.create_Booking(row[0], row[1], row[2], row[3], row[4], row[5])
     disconnect()
    
     return b
 
 
 def retrieve_booking_by_passenger(first_name, last_name, dob):
-    query = """SELECT b.customer_id, reference_no, flight_no, flight_date 
+    query = """SELECT reference_no, b.customer_id, first_name, last_name, flight_no, flight_date 
             FROM passengers p INNER JOIN bookings b 
             ON p.customer_id = b.customer_id 
             WHERE first_name = '{fn}' AND last_name = '{ln}' 
@@ -172,7 +174,7 @@ def retrieve_booking_by_passenger(first_name, last_name, dob):
     bookings = []
     
     for row in cur.fetchall():
-        b = book.create_Booking(row[0], row[1], row[2], row[3])
+        b = book.create_Booking(row[0], row[1], row[2], row[3], row[4], row[5])
         bookings.append(b)
     
     db.close()

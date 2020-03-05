@@ -3,7 +3,7 @@ Created on 4 Mar 2020
 
 @author: Lisa Wehbrink
 '''
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from data import connection
 
 app = Flask(__name__)
@@ -15,6 +15,49 @@ def index():
     c = connection.count_customers()
     
     return render_template('index.html', user='Lisa', bookings=b, flights=f, customers=c)
+
+@app.route("/book")
+def booksite():
+    
+    return render_template('book.html', user='Lisa')
+
+
+@app.route("/cancel")
+def cancel():
+    
+    return render_template('cancel.html', user='Lisa')
+
+
+@app.route("/display", methods = ['POST', 'GET'])
+def display():
+    if request.method == 'POST':
+        refno = request.form.getlist('referencenumber')[0]
+        
+        if refno != "":
+            b = []
+            b.append(connection.retrieve_booking(int(refno)))
+        else:
+            fname = request.form.getlist('firstname')[0]
+            lname = request.form.getlist('lastname')[0]
+            dob = request.form.getlist('dateofbirth')[0]
+            
+            if fname != "" and lname != "" and dob != "":
+                b = connection.retrieve_booking_by_passenger(fname, lname, dob)
+            else:
+                b = []    
+                
+        return render_template("display.html", bookings = b)
+    
+    
+    else:
+        return render_template('display.html')
+
+@app.route("/stats")
+def stats():
+    
+    return render_template('stats.html', user='Lisa')
+
+
 
 if __name__ == "__main__":
     app.run()             
