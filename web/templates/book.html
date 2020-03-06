@@ -22,7 +22,53 @@
 	</div>
 	
 	<div class="content">
-		What are you looking for, {{user}}?
+		<div id="myform">
+			<form "{{ url_for('book') }}" method="post">
+				<label for="origin">From:</label>
+				<input type="text" id="origin" name="origin" placeholder="LHR">
+				
+				<label for="dest">To:</label>
+				<input type="text" id="dest" name="destination" placeholder="FRA">
+				
+				<label for="fdat">Date</label>
+				<input type="date" id="fdat" name="flightdate">
+				
+				<input type="submit" value="Submit" id="searchbutton">
+			</form>
+		</div>
+	
+	<div class="output">
+			<table>
+				<thead>
+					<tr>
+						<th>Flight Number</th>
+						<th>Flight Date</th>
+						<th>Departure Time</th>
+						<th>Arrival Time</th>
+						<th>Origin</th>
+						<th>Destination</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+						{% for f in flights %}
+					<tr>
+						<td>{{f.flight_no}}</td>
+						<td>{{f.date}}</td>
+						<td>{{f.dep_time}}</td>
+						<td>{{f.arr_time}}</td>
+						<td>{{f.origin}}</td>
+						<td>{{f.destination}}</td>
+						<td>
+							<form>
+								<input type="submit" value="Book" id="cancelbutton">
+							</form>
+						</td>
+					</tr>
+						{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 	
 	

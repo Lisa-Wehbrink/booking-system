@@ -93,7 +93,7 @@ body {
 }
 
 #myform {
-	width: 300px;
+	width: 250px;
 	padding: 10px 20px 20px 20px;
 	display: inline-block;
 	border: 2px solid cornflowerblue;
@@ -136,10 +136,21 @@ input[type=text], input[type=number], input[type=date] {
 	background-color: midnightblue;
 }
 
+#cancelbutton:hover {
+	background-color: midnightblue;
+}
+
+#intro {
+	display: block;
+	margin-left: 100px;
+	margin-bottom: 10px;
+	border-bottom: 2px solid cornflowerblue;
+}
+
 .output {
 	display: inline-block;
 	height: 400px;
-	padding: 10px 15px 15px 15px;
+	padding: 10px 15px 15px 40px;
 	display: inline-block;
 	vertical-align: top;
 }

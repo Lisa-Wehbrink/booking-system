@@ -73,6 +73,28 @@ def count_flights():
     return result[0]
 
 
+def search_flights(fdat, fori, fdest):
+    query = """SELECT flight_no, flight_date, dep_time, arr_time, origin, destination
+                FROM flights
+                WHERE flight_date = '{fd}' AND origin = '{org}' and destination='{dest}'"""
+    
+    query = query.format(fd = str(fdat), org=fori, dest=fdest)
+
+    connect()
+    cur = db.cursor()
+    cur.execute(query)
+    
+    records = cur.fetchall()
+    flights = []
+    
+    for row in records:
+        f = flight.create_Flight(row[0], str(row[1]), row[2], row[3], 0, row[4], row[5])
+        flights.append(f)
+    
+    disconnect()
+    
+    return flights
+
 def retrieve_flight(number, flight_date):
     connect()
     

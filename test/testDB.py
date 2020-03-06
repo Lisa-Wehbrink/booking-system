@@ -26,6 +26,16 @@ class TestBook(unittest.TestCase):
         test = connection.retrieve_flight(989, "'2020-05-18'")
         
         assert test.flight_no == 989
+        
+    
+    def testFlightSearch(self):
+        d = '2020-12-24'
+        origin = 'LHR'
+        destination = 'HAJ'
+        
+        f = connection.search_flights(d, origin, destination)
+        
+        assert len(f) > 0
     
     
     def testCustomQuery(self):

@@ -16,10 +16,17 @@ def index():
     
     return render_template('index.html', user='Lisa', bookings=b, flights=f, customers=c)
 
-@app.route("/book")
-def booksite():
-    
-    return render_template('book.html', user='Lisa')
+@app.route("/book", methods = ['POST', 'GET'])
+def book():
+    if request.method == 'POST':
+        flight_date = request.form.getlist('flightdate')[0]
+        origin = request.form.getlist('origin')[0]
+        destination = request.form.getlist('destination')[0]
+
+        f = connection.search_flights(flight_date, origin, destination)
+        return render_template('book.html', flights = f)
+    else:
+        return render_template('book.html')
 
 
 @app.route("/cancel", methods = ['POST', 'GET'])
